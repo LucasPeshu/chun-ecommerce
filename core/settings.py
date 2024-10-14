@@ -2,6 +2,10 @@ from pathlib import Path
 import os
 import environ
 from datetime import timedelta
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+import cloudinary_storage
 
 env = environ.Env()
 environ.Env.read_env()
@@ -40,7 +44,8 @@ PROJECT_APPS = [
 ]
 
 ECOMMERCE_APPS = [
-  
+  'apps.category',
+  'apps.product',
 ]
 
 THIRD_PARTY_APPS = [
@@ -52,9 +57,11 @@ THIRD_PARTY_APPS = [
   'rest_framework_simplejwt.token_blacklist',
   'ckeditor',
   'ckeditor_uploader',
+  'cloudinary',
+  'cloudinary_storage',
 ]
 
-INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + ECOMMERCE_APPS + THIRD_PARTY_APPS
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -173,7 +180,14 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build/static')
 ]
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
