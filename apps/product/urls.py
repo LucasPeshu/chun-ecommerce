@@ -7,6 +7,6 @@ urlpatterns = [
     path('product/<slug:slug>', ProductDetailView.as_view()),
     path('get-products', ListProductsView.as_view()),
     path('search', ListSearchView.as_view()),
-    path('related/<slug:slug>', ListRelatedView.as_view()),
+    path('related/<slug:productSlug>', ListRelatedView.as_view()),
     path('by/search', ListBySearchView.as_view()),
 ]

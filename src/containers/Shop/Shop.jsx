@@ -73,7 +73,7 @@ const Shop = ({
 
   return (
     <Layout>
-      <div className="bg-white">
+      <div className="bg-gray-50">
         <div>
           <main className="mx-auto px-6 sm:px-4 lg:px-48">
             <div className="relative z-10 flex items-baseline justify-between py-6 border-b border-gray-200">

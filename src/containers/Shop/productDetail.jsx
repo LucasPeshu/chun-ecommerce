@@ -7,7 +7,12 @@ import {
 } from "../../redux/actions/products";
 import { useEffect } from "react";
 
-const ProductDetail = ({ get_product, get_related_products, product }) => {
+const ProductDetail = ({
+  get_product,
+  get_related_products,
+  product,
+  related_products,
+}) => {
   const params = useParams();
   const productSlug = params.productSlug;
 
@@ -23,15 +28,15 @@ const ProductDetail = ({ get_product, get_related_products, product }) => {
 
   return (
     <Layout>
-      <div className="bg-white">
-        <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
+      <div className="bg-gray-50">
+        <div className="mx-auto py-16 sm:py-24 px-6 sm:px-4 lg:px-48">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-center">
             {/* Display de imagen del producto */}
             <div className="flex flex-col items-center">
               <img
-                src={product.get_thumbnail} // Asegúrate de que product tenga esta propiedad
-                alt={product.name} // Usa el nombre como texto alternativo
-                className="w-full max-w-2xl h-auto object-center object-cover rounded-md"
+                src={product.get_thumbnail}
+                alt={product.name}
+                className="w-full h-96 object-center object-cover rounded-md"
               />
             </div>
 
@@ -66,6 +71,49 @@ const ProductDetail = ({ get_product, get_related_products, product }) => {
               </form>
             </div>
           </div>
+
+          {/* Sección de productos relacionados */}
+          <div className="mt-16">
+            <div className="">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+                Productos relacionados
+              </h2>
+
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {related_products && related_products.length > 0 ? (
+                  related_products.map((relatedProduct) => (
+                    <div key={relatedProduct.id} className="group relative">
+                      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                        <img
+                          src={relatedProduct.get_thumbnail}
+                          alt={relatedProduct.name}
+                          className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                        />
+                      </div>
+                      <div className="mt-4 flex justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-700">
+                            <a href={`/product-detail/${relatedProduct.slug}`}>
+                              <span
+                                aria-hidden="true"
+                                className="absolute inset-0"
+                              ></span>
+                              {relatedProduct.name}
+                            </a>
+                          </h3>
+                        </div>
+                        <p className="text-lg font-medium text-gray-900">
+                          ${relatedProduct.price}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>No hay productos relacionados disponibles.</p>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>
@@ -75,6 +123,7 @@ const ProductDetail = ({ get_product, get_related_products, product }) => {
 const mapStateToProps = (state) => {
   return {
     product: state.Products.product,
+    related_products: state.Products.related_products, // Asegúrate de tener estos datos en tu store
   };
 };
 

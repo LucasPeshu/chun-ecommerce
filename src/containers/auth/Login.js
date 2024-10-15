@@ -33,7 +33,7 @@ const Login = ({ login, loading }) => {
 
   return (
     <Layout>
-      <div className="flex flex-col py-12 min-h-screen justify-center mx-auto px-6 sm:px-4 lg:px-48">
+      <div className="flex flex-col py-12 min-h-screen justify-center mx-auto px-6 sm:px-4 lg:px-48 bg-gray-50">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="text-center text-3xl font-extrabold text-gray-900">
             Inicia sesión
