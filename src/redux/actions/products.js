@@ -106,7 +106,7 @@ export const get_products_by_sold = () => async (dispatch) => {
   }
 };
 
-export const get_product = (productId) => async (dispatch) => {
+export const get_product = (productSlug) => async (dispatch) => {
   const config = {
     headers: {
       Accept: "application/json",
@@ -115,7 +115,7 @@ export const get_product = (productId) => async (dispatch) => {
 
   try {
     const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/product/product/${productId}`,
+      `${process.env.REACT_APP_API_URL}/api/product/product/${productSlug}`,
       config
     );
 
@@ -136,7 +136,7 @@ export const get_product = (productId) => async (dispatch) => {
   }
 };
 
-export const get_related_products = (productId) => async (dispatch) => {
+export const get_related_products = (productSlug) => async (dispatch) => {
   const config = {
     headers: {
       Accept: "application/json",
@@ -145,7 +145,7 @@ export const get_related_products = (productId) => async (dispatch) => {
 
   try {
     const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/product/related/${productId}`,
+      `${process.env.REACT_APP_API_URL}/api/product/related/${productSlug}`,
       config
     );
 

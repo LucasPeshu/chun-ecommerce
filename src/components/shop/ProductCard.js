@@ -14,7 +14,7 @@ const ProductCard = ({ product }) => {
       <div className="py-4 flex justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-700">
-            <Link to={`/producto/${product.slug}`}>
+            <Link to={`/product-detail/${product.slug}`}>
               <span aria-hidden="true" className="absolute inset-0" />
               {product.name}
             </Link>

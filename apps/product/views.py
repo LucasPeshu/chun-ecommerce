@@ -12,24 +12,27 @@ from django.db.models import Q
 class ProductDetailView(APIView):
     permission_classes = (permissions.AllowAny, )
 
-    def get(self, request, productId, format=None):
-        try:
-            product_id=int(productId)
-        except:
+    def get(self, request, slug, format=None):
+        # Verificar si el slug es una cadena válida
+        if not isinstance(slug, str):
             return Response(
-                {'error': 'Product ID must be an integer'},
+                {'error': 'Slug must be a string'},
                 status=status.HTTP_404_NOT_FOUND)
         
-        if Product.objects.filter(id=product_id).exists():
-            product = Product.objects.get(id=product_id)
+        # Buscar si existe el producto con el slug dado
+        if Product.objects.filter(slug=slug).exists():
+            product = Product.objects.get(slug=slug)
 
+            # Serializar el producto
             product = ProductSerializer(product)
 
+            # Devolver la respuesta con los datos del producto
             return Response({'product': product.data}, status=status.HTTP_200_OK)
         else:
             return Response(
-                {'error': 'Product with this ID does not exist'},
+                {'error': 'Product with this slug does not exist'},
                 status=status.HTTP_404_NOT_FOUND)
+
 
 
 class ListProductsView(APIView):
@@ -149,67 +152,66 @@ class ListSearchView(APIView):
 class ListRelatedView(APIView):
     permission_classes = (permissions.AllowAny, )
 
-    def get(self, request, productId, format=None):
-        try:
-            product_id = int(productId)
-        except:
+    def get(self, request, productSlug, format=None):
+        # Validar si el producto existe mediante el slug
+        if not Product.objects.filter(slug=productSlug).exists():
             return Response(
-                {'error': 'Product ID must be an integer'},
-                status=status.HTTP_404_NOT_FOUND)
-        
-        # Existe product id
-        if not Product.objects.filter(id=product_id).exists():
-            return Response(
-                {'error': 'Product with this product ID does not exist'},
-                status=status.HTTP_404_NOT_FOUND)
-            
-        category = Product.objects.get(id=product_id).category
+                {'error': 'Product with this slug does not exist'},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
+        # Obtener el producto a través del slug
+        product = Product.objects.get(slug=productSlug)
+        category = product.category
+
+        # Comprobar si hay productos relacionados en la misma categoría
         if Product.objects.filter(category=category).exists():
-            # Si la categoria tiene padrem filtrar solo por la categoria y no el padre tambien
+            # Si la categoría tiene un padre, filtrar solo por la categoría (sin el padre)
             if category.parent:
                 related_products = Product.objects.order_by(
                     '-sold'
                 ).filter(category=category)
             else:
+                # Si la categoría no tiene padre, y no hay subcategorías, filtrar por la categoría
                 if not Category.objects.filter(parent=category).exists():
                     related_products = Product.objects.order_by(
                         '-sold'
                     ).filter(category=category)
-                
                 else:
+                    # Si tiene subcategorías, filtrar por todas ellas
                     categories = Category.objects.filter(parent=category)
-                    filtered_categories = [category]
+                    filtered_categories = [category] + list(categories)
 
-                    for cat in categories:
-                        filtered_categories.append(cat)
-
-                    filtered_categories = tuple(filtered_categories)
                     related_products = Product.objects.order_by(
                         '-sold'
                     ).filter(category__in=filtered_categories)
-                
-            #Excluir producto que estamos viendo
-            related_products = related_products.exclude(id=product_id)
+
+            # Excluir el producto que estamos visualizando
+            related_products = related_products.exclude(slug=productSlug)
             related_products = ProductSerializer(related_products, many=True)
 
+            # Limitar a 3 productos relacionados
             if len(related_products.data) > 3:
                 return Response(
                     {'related_products': related_products.data[:3]},
-                    status=status.HTTP_200_OK)
+                    status=status.HTTP_200_OK
+                )
             elif len(related_products.data) > 0:
                 return Response(
                     {'related_products': related_products.data},
-                    status=status.HTTP_200_OK)
+                    status=status.HTTP_200_OK
+                )
             else:
                 return Response(
                     {'error': 'No related products found'},
-                    status=status.HTTP_200_OK)
-            
+                    status=status.HTTP_200_OK
+                )
         else:
             return Response(
                 {'error': 'No related products found'},
-                status=status.HTTP_200_OK)
+                status=status.HTTP_200_OK
+            )
+
 
 
 class ListBySearchView(APIView):

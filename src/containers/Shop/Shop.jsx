@@ -22,36 +22,34 @@ const Shop = ({
   filtered_products,
 }) => {
   const [filtered, setFiltered] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("0");
 
   useEffect(() => {
     get_categories();
     get_products();
-  }, []);
+    window.scrollTo(0, 0);
+  }, [get_categories, get_products]);
+
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId);
+    get_filtered_products(categoryId, "Any", "created", "desc"); // Ajusta los otros parámetros según sea necesario
+    setFiltered(true);
+  };
+
+  const handleShowAllProducts = () => {
+    setSelectedCategory("0"); // Restablece la categoría seleccionada
+    get_products(); // Recupera todos los productos
+    setFiltered(false); // Resetea el estado de filtrado
+  };
 
   const showProducts = () => {
     let results = [];
     let display = [];
 
-    if (
-      filtered_products &&
-      filtered_products !== null &&
-      filtered_products !== undefined &&
-      filtered
-    ) {
-      filtered_products.map((product, index) => {
-        return display.push(
-          <div key={index}>
-            <ProductCard product={product} />
-          </div>
-        );
-      });
-    } else if (
-      !filtered &&
-      products &&
-      products !== null &&
-      products !== undefined
-    ) {
-      products.map((product, index) => {
+    const displayProducts = filtered ? filtered_products : products;
+
+    if (displayProducts && displayProducts.length) {
+      displayProducts.map((product, index) => {
         return display.push(
           <div key={index}>
             <ProductCard product={product} />
@@ -77,7 +75,7 @@ const Shop = ({
     <Layout>
       <div className="bg-white">
         <div>
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <main className="mx-auto px-6 sm:px-4 lg:px-48">
             <div className="relative z-10 flex items-baseline justify-between py-6 border-b border-gray-200">
               <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">
                 Productos
@@ -105,24 +103,34 @@ const Shop = ({
                   >
                     <Menu.Items className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div className="py-1" role="none">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={handleShowAllProducts}
+                              className={classNames(
+                                active ? "bg-gray-100" : "",
+                                "block w-full text-left px-4 py-2 text-sm text-gray-500"
+                              )}
+                            >
+                              Todos
+                            </button>
+                          )}
+                        </Menu.Item>
                         {categories &&
-                          categories !== null &&
-                          categories !== undefined &&
                           categories.map((category) => (
                             <Menu.Item key={category.id}>
                               {({ active }) => (
-                                <a
-                                  href={`/categories/${category.id}`}
+                                <button
+                                  onClick={() =>
+                                    handleCategoryClick(category.id)
+                                  }
                                   className={classNames(
-                                    category.current
-                                      ? "font-medium text-gray-900"
-                                      : "text-gray-500",
                                     active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm"
+                                    "block w-full text-left px-4 py-2 text-sm text-gray-500"
                                   )}
                                 >
                                   {category.name}
-                                </a>
+                                </button>
                               )}
                             </Menu.Item>
                           ))}
@@ -134,11 +142,7 @@ const Shop = ({
             </div>
 
             {/* Products */}
-            <div className="lg:col-span-3 py-8">
-              {/* Replace with your content */}
-
-              {products && showProducts()}
-            </div>
+            <div className="lg:col-span-3 py-8">{showProducts()}</div>
           </main>
         </div>
       </div>

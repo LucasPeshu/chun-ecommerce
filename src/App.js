@@ -16,7 +16,10 @@ import Login from "./containers/auth/Login";
 import Activate from "./containers/auth/Activate";
 import ResetPassword from "./containers/auth/ResetPassword";
 import ResetPasswordConfirm from "./containers/auth/ResetPasswordConfirm";
+
 import Shop from "./containers/Shop/Shop";
+import ProductDetail from "./containers/Shop/productDetail";
+
 function App() {
   return (
     <Provider store={store}>
@@ -38,6 +41,11 @@ function App() {
           />
 
           <Route exact path="/shop" element={<Shop />} />
+          <Route
+            exact
+            path="/product-detail/:productSlug"
+            element={<ProductDetail />}
+          />
         </Routes>
       </Router>
     </Provider>
