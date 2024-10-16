@@ -1,6 +1,14 @@
 import { connect } from "react-redux";
 import Layout from "../../hocs/Layout";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+
+import {
+  get_items,
+  add_item,
+  get_total,
+  get_item_total,
+} from "../../redux/actions/cart";
 import {
   get_product,
   get_related_products,
@@ -12,7 +20,32 @@ const ProductDetail = ({
   get_related_products,
   product,
   related_products,
+  get_items,
+  add_item,
+  get_total,
+  get_item_total,
 }) => {
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const addToCart = async () => {
+    if (
+      product &&
+      product !== null &&
+      product !== undefined &&
+      product.quantity > 0
+    ) {
+      setLoading(true);
+      await add_item(product);
+      await get_items();
+      await get_total();
+      await get_item_total();
+      setLoading(false);
+      navigate("/cart");
+    }
+  };
+
   const params = useParams();
   const productSlug = params.productSlug;
 
@@ -23,7 +56,7 @@ const ProductDetail = ({
 
   // Verificación de carga
   if (!product) {
-    return <div>Cargando...</div>; // Mensaje de carga mientras se obtiene el producto
+    return <div>Cargando...</div>;
   }
 
   return (
@@ -59,16 +92,17 @@ const ProductDetail = ({
                 />
               </div>
 
-              <form className="mt-6">
+              <div className="mt-6">
                 <div className="mt-10 flex sm:flex-col1">
                   <button
+                    onClick={addToCart}
                     type="submit"
                     className="max-w-xs flex-1 bg-purple-500 hover:bg-purple-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full"
                   >
                     Agregar al carrito
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
 
@@ -123,10 +157,15 @@ const ProductDetail = ({
 const mapStateToProps = (state) => {
   return {
     product: state.Products.product,
-    related_products: state.Products.related_products, // Asegúrate de tener estos datos en tu store
+    related_products: state.Products.related_products,
   };
 };
 
-export default connect(mapStateToProps, { get_product, get_related_products })(
-  ProductDetail
-);
+export default connect(mapStateToProps, {
+  get_product,
+  get_related_products,
+  get_items,
+  add_item,
+  get_total,
+  get_item_total,
+})(ProductDetail);

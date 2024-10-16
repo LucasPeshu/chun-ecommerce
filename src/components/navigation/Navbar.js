@@ -1,14 +1,6 @@
 import React, { useState, Fragment } from "react";
 import { Link, Navigate } from "react-router-dom";
-import {
-  FaBars,
-  FaTimes,
-  FaInstagram,
-  FaWhatsapp,
-  FaEnvelope,
-  FaPhone,
-  FaShoppingCart,
-} from "react-icons/fa";
+import { FaBars, FaTimes, FaShoppingCart } from "react-icons/fa";
 import { connect } from "react-redux";
 import Alert from "../alert";
 
@@ -152,9 +144,12 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
             </div>
             <div className="lg:hidden flex items-center space-x-2">
               {/* Botón del carrito de compras en móviles */}
-              <button className="flex items-center text-gray-900 hover:text-purple-400">
+              <Link
+                to="/cart"
+                className="flex items-center text-gray-900 hover:text-purple-400"
+              >
                 <FaShoppingCart className="text-3xl" />
-              </button>
+              </Link>
               {isAuthenticated ? authLinks : guestLinks}
               {isOpen ? (
                 <FaTimes
@@ -171,9 +166,12 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
 
             {/* Botón del carrito de compras y auth en pantallas grandes */}
             <div className="hidden lg:flex items-center ml-auto gap-4">
-              <button className="flex items-center text-gray-900 hover:text-purple-400">
+              <Link
+                to="/cart"
+                className="flex items-center text-gray-900 hover:text-purple-400"
+              >
                 <FaShoppingCart className="text-3xl" />
-              </button>
+              </Link>
               {isAuthenticated ? authLinks : guestLinks}
             </div>
           </div>
@@ -191,7 +189,7 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
               </li>
               <li>
                 <a
-                  href="/"
+                  href="/shop"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
                 >
                   Productos
