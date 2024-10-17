@@ -13,7 +13,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Navbar = ({ isAuthenticated, user, logout }) => {
+const Navbar = ({ isAuthenticated, user, logout, total_items }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -149,6 +149,9 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
                 className="flex items-center text-gray-900 hover:text-purple-400"
               >
                 <FaShoppingCart className="text-3xl" />
+                <span className="text-xs absolute top-1 mt-3 ml-5 bg-red-500 text-white font-bold rounded-full px-2 p-1 text-center">
+                  {total_items}
+                </span>
               </Link>
               {isAuthenticated ? authLinks : guestLinks}
               {isOpen ? (
@@ -171,6 +174,9 @@ const Navbar = ({ isAuthenticated, user, logout }) => {
                 className="flex items-center text-gray-900 hover:text-purple-400"
               >
                 <FaShoppingCart className="text-3xl" />
+                <span className="text-xs absolute top-1 mt-3 ml-5 bg-red-500 text-white font-bold rounded-full px-2 p-1 text-center">
+                  {total_items}
+                </span>
               </Link>
               {isAuthenticated ? authLinks : guestLinks}
             </div>
@@ -216,6 +222,7 @@ const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.Auth.isAuthenticated,
     user: state.Auth.user,
+    total_items: state.Cart.total_items,
   };
 };
 

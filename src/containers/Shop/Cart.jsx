@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import Layout from "../../hocs/Layout";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   get_items,
   remove_item,
@@ -11,7 +12,6 @@ import {
 import { setAlert } from "../../redux/actions/alert";
 import { useState } from "react";
 import CartItem from "../../components/shop/CartItem";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
 
 const Cart = ({
   get_items,
@@ -24,6 +24,7 @@ const Cart = ({
   remove_item,
   update_item,
   items,
+  isAuthenticated,
 }) => {
   const [render, setRender] = useState(false);
 
@@ -61,9 +62,43 @@ const Cart = ({
     );
   };
 
+  const checkoutButton = () => {
+    if (total_items < 1) {
+      return (
+        <>
+          <Link to="/shop">
+            <button className="w-full bg-purple-500 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-purple-500">
+              Buscar productos
+            </button>
+          </Link>
+        </>
+      );
+    } else if (!isAuthenticated) {
+      return (
+        <>
+          <Link to="/login">
+            <button className="w-full bg-purple-500 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-purple-500">
+              Login
+            </button>
+          </Link>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Link to="/checkout">
+            <button className="w-full bg-purple-500 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-purple-500">
+              Ir a pagar
+            </button>
+          </Link>
+        </>
+      );
+    }
+  };
+
   return (
     <Layout>
-      <div className="bg-white">
+      <div className="bg-gray-50">
         <div className="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
           <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             Artículos en el carrito: {total_items}
@@ -93,28 +128,21 @@ const Cart = ({
 
               <dl className="mt-6 space-y-4">
                 <div className="flex items-center justify-between">
-                  <dt className="text-sm text-gray-600">Subtotal</dt>
+                  <dt className="text-sm text-gray-600">Subtotal:</dt>
                   <dd className="text-sm font-medium text-gray-900">
                     ${compare_amount.toFixed(2)}
                   </dd>
                 </div>
-
-                <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                  <dt className="flex items-center text-sm text-gray-600">
-                    <span>Costo de envío</span>
-                  </dt>
-                  <dd className="text-sm font-medium text-gray-900">$550.00</dd>
-                </div>
-
                 <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
                   <dt className="text-base font-medium text-gray-900">
-                    Order total
+                    Total:
                   </dt>
                   <dd className="text-base font-medium text-gray-900">
                     ${amount.toFixed(2)}
                   </dd>
                 </div>
               </dl>
+              <div className="mt-6">{checkoutButton()}</div>
             </section>
           </div>
         </div>
@@ -128,6 +156,7 @@ const mapStateToProps = (state) => ({
   compare_amount: state.Cart.compare_amount,
   total_items: state.Cart.total_items,
   amount: state.Cart.amount,
+  isAuthenticated: state.Auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps, {
