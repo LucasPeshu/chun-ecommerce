@@ -27,7 +27,11 @@ const Navbar = ({ isAuthenticated, user, logout, total_items }) => {
     setRedirect(true);
   };
 
-  if (redirect) return <Navigate to="/" />;
+  if (redirect) {
+    window.location.reload(false);
+    window.scrollTo(0, 0);
+    return <Navigate to="/" />;
+  }
 
   const authLinks = (
     <Menu as="div" className="relative inline-block text-left z-50">

@@ -75,8 +75,8 @@ const Shop = ({
     <Layout>
       <div className="bg-gray-50">
         <div>
-          <main className="mx-auto px-6 sm:px-4 lg:px-48">
-            <div className="relative z-10 flex items-baseline justify-between py-6 border-b border-gray-200">
+          <main className="mx-auto py-16 px-6 sm:px-4 lg:px-48">
+            <div className="relative z-10 flex items-baseline justify-between border-b border-gray-200">
               <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">
                 Productos
               </h1>
@@ -84,7 +84,7 @@ const Shop = ({
               <div className="flex items-center">
                 <Menu as="div" className="relative inline-block text-left">
                   <div>
-                    <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                    <Menu.Button className="pb-2 group inline-flex justify-center text-md font-medium text-gray-700 hover:text-gray-900">
                       Categorías
                       <span className="flex-shrink-0 -mr-1 ml-1 text-gray-400 group-hover:text-gray-500">
                         ▼

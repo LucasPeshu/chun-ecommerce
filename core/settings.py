@@ -7,6 +7,7 @@ import cloudinary.uploader
 import cloudinary.api
 import cloudinary_storage
 
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -21,6 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
+
+#MERCADO PAGO
+MERCADO_PAGO_PUBLIC_KEY=os.environ.get('MP_PUBLIC_KEY')
+MERCADO_PAGO_ACCESS_TOKEN = os.environ.get('MP_ACCESS_TOKEN')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
@@ -46,7 +51,9 @@ PROJECT_APPS = [
 ECOMMERCE_APPS = [
   'apps.category',
   'apps.product',
-  'apps.cart'
+  'apps.cart',
+  'apps.shipping',
+  'apps.orders',
 ]
 
 THIRD_PARTY_APPS = [

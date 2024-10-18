@@ -9,11 +9,13 @@ import {
   get_total,
   get_item_total,
 } from "../../redux/actions/cart";
+import { get_shipping_options } from "../../redux/actions/shipping";
 import { setAlert } from "../../redux/actions/alert";
 import { useState } from "react";
 import CartItem from "../../components/shop/CartItem";
+import ShippingForm from "../../components/shop/ShippingForm";
 
-const Cart = ({
+const Checkout = ({
   get_items,
   get_total,
   get_item_total,
@@ -25,14 +27,44 @@ const Cart = ({
   update_item,
   items,
   isAuthenticated,
+  get_shipping_options,
+  shipping,
+  user,
 }) => {
   const [render, setRender] = useState(false);
+
+  const [formData, setFormData] = useState({
+    full_name: "",
+    address_line_1: "",
+    address_line_2: "",
+    city: "",
+    postal_zip_code: "",
+    telephone_number: "",
+    shipping_id: 0,
+  });
+
+  const [data, setData] = useState({
+    instance: {},
+  });
+
+  const {
+    full_name,
+    address_line_1,
+    address_line_2,
+    postal_zip_code,
+    telephone_number,
+    shipping_id,
+  } = formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   useEffect(() => {
     window.scrollTo(0, 0);
     get_items();
     get_total();
     get_item_total();
+    get_shipping_options();
   }, [render]);
 
   const showItems = () => {
@@ -96,6 +128,33 @@ const Cart = ({
     }
   };
 
+  const renderShipping = () => {
+    if (shipping && shipping.length > 0) {
+      return (
+        <div>
+          {shipping.map((shipping_option, index) => (
+            <div key={index} className="flex items-center mb-4">
+              <input
+                onChange={(e) => onChange(e)}
+                value={shipping_option.id}
+                name="shipping_id"
+                type="radio"
+                required
+                className="w-4 h-4 text-purple-500 border-gray-300 focus:ring-purple-500"
+              />
+              <label className="ml-3 text-md font-medium text-gray-700">
+                {shipping_option.name} - ${shipping_option.price} (
+                {shipping_option.time_to_delivery})
+              </label>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return null; // Retorna null si no hay opciones de envío
+  };
+
   return (
     <Layout>
       <div className="bg-gray-50">
@@ -115,27 +174,18 @@ const Cart = ({
             </section>
 
             {/* Order summary */}
-            <section
-              aria-labelledby="summary-heading"
-              className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
-            >
-              <h2
-                id="summary-heading"
-                className="text-2xl font-semibold text-gray-800 mb-6"
-              >
-                Resumen del pedido
-              </h2>
-
-              <dl className="mt-6 space-y-4">
-                <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-                  <dt className="text-md font-medium text-gray-900">Total:</dt>
-                  <dd className="text-md font-medium text-gray-900">
-                    ${amount.toFixed(2)}
-                  </dd>
-                </div>
-              </dl>
-              <div className="mt-6">{checkoutButton()}</div>
-            </section>
+            <ShippingForm
+              full_name={full_name}
+              address_line_1={address_line_1}
+              address_line_2={address_line_2}
+              postal_zip_code={postal_zip_code}
+              telephone_number={telephone_number}
+              onChange={onChange}
+              user={user}
+              renderShipping={renderShipping}
+              shipping_id={shipping_id}
+              shipping={shipping}
+            />
           </div>
         </div>
       </div>
@@ -149,6 +199,8 @@ const mapStateToProps = (state) => ({
   total_items: state.Cart.total_items,
   amount: state.Cart.amount,
   isAuthenticated: state.Auth.isAuthenticated,
+  shipping: state.Shipping.shipping,
+  user: state.Auth.user,
 });
 
 export default connect(mapStateToProps, {
@@ -158,4 +210,5 @@ export default connect(mapStateToProps, {
   get_total,
   get_item_total,
   setAlert,
-})(Cart);
+  get_shipping_options,
+})(Checkout);

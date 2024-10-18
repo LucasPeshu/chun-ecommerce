@@ -20,6 +20,8 @@ import ResetPasswordConfirm from "./containers/auth/ResetPasswordConfirm";
 import Shop from "./containers/Shop/Shop";
 import ProductDetail from "./containers/Shop/productDetail";
 import Cart from "./containers/Shop/Cart";
+import Checkout from "./containers/Shop/Checkout";
+import PrivateRoute from "./hocs/PrivateRoute";
 
 function App() {
   return (
@@ -28,25 +30,27 @@ function App() {
         <Routes>
           <Route path="*" element={<Error404 />} />
 
-          <Route exact path="/" element={<Home />} />
+          <Route path="/" element={<Home />} />
 
           {/* Auth routes */}
-          <Route exact path="/register" element={<Signup />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="activate/:uid/:token" element={<Activate />} />
-          <Route exact path="/reset_password" element={<ResetPassword />} />
+          <Route path="/register" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="activate/:uid/:token" element={<Activate />} />
+          <Route path="/reset_password" element={<ResetPassword />} />
           <Route
-            exact
             path="/password/reset/confirm/:uid/:token"
             element={<ResetPasswordConfirm />}
           />
-          <Route exact path="/shop" element={<Shop />} />
+          <Route path="/shop" element={<Shop />} />
           <Route
-            exact
             path="/product-detail/:productSlug"
             element={<ProductDetail />}
           />
-          <Route exact path="/cart" element={<Cart />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/checkout"
+            element={<PrivateRoute element={Checkout} />}
+          />
         </Routes>
       </Router>
     </Provider>
