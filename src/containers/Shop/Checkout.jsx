@@ -11,6 +11,13 @@ import {
 } from "../../redux/actions/cart";
 import { get_shipping_options } from "../../redux/actions/shipping";
 import { setAlert } from "../../redux/actions/alert";
+import { refresh } from "../../redux/actions/auth";
+import {
+  get_payment_total,
+  get_client_token,
+  process_payment,
+} from "../../redux/actions/payment";
+import DropIn from "braintree-web-drop-in-react";
 import { useState } from "react";
 import CartItem from "../../components/shop/CartItem";
 import ShippingForm from "../../components/shop/ShippingForm";
@@ -30,6 +37,18 @@ const Checkout = ({
   get_shipping_options,
   shipping,
   user,
+  refresh,
+  get_payment_total,
+  get_client_token,
+  process_payment,
+  clientToken,
+  made_payment,
+  loading,
+  original_price,
+  total_amount,
+  total_compare_amount,
+  estimated_tax,
+  shipping_cost,
 }) => {
   const [render, setRender] = useState(false);
 
@@ -67,9 +86,17 @@ const Checkout = ({
     get_shipping_options();
   }, [render]);
 
+  useEffect(() => {
+    get_client_token();
+  }, [user]);
+
+  useEffect(() => {
+    get_payment_total(shipping_id, "");
+  }, [shipping_id]);
+
   const showItems = () => {
     return (
-      <div>
+      <div className="h-96 lg:min-h-screen overflow-y-auto overflow-x-hidden">
         {items &&
           items !== null &&
           items !== undefined &&
@@ -201,6 +228,15 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.Auth.isAuthenticated,
   shipping: state.Shipping.shipping,
   user: state.Auth.user,
+  total_items: state.Cart.total_items,
+  clientToken: state.Payment.clientToken,
+  made_payment: state.Payment.made_payment,
+  loading: state.Payment.loading,
+  original_price: state.Payment.original_price,
+  total_amount: state.Payment.total_amount,
+  total_compare_amount: state.Payment.total_compare_amount,
+  estimated_tax: state.Payment.estimated_tax,
+  shipping_cost: state.Payment.shipping_cost,
 });
 
 export default connect(mapStateToProps, {
@@ -211,4 +247,8 @@ export default connect(mapStateToProps, {
   get_item_total,
   setAlert,
   get_shipping_options,
+  refresh,
+  get_payment_total,
+  get_client_token,
+  process_payment,
 })(Checkout);

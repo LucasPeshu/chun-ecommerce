@@ -21,6 +21,8 @@ import Shop from "./containers/Shop/Shop";
 import ProductDetail from "./containers/Shop/productDetail";
 import Cart from "./containers/Shop/Cart";
 import Checkout from "./containers/Shop/Checkout";
+import ThankYou from "./containers/Shop/ThankYou";
+
 import PrivateRoute from "./hocs/PrivateRoute";
 
 function App() {
@@ -51,6 +53,7 @@ function App() {
             path="/checkout"
             element={<PrivateRoute element={Checkout} />}
           />
+          <Route exact path="/thankyou" element={<ThankYou />} />
         </Routes>
       </Router>
     </Provider>

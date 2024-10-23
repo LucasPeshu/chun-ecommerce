@@ -37,7 +37,7 @@ const Cart = ({
 
   const showItems = () => {
     return (
-      <div>
+      <div className="h-96 overflow-y-auto overflow-x-hidden">
         {items &&
           items !== null &&
           items !== undefined &&

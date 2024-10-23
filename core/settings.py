@@ -23,10 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-#MERCADO PAGO
-MERCADO_PAGO_PUBLIC_KEY=os.environ.get('MP_PUBLIC_KEY')
-MERCADO_PAGO_ACCESS_TOKEN = os.environ.get('MP_ACCESS_TOKEN')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
@@ -54,6 +50,7 @@ ECOMMERCE_APPS = [
   'apps.cart',
   'apps.shipping',
   'apps.orders',
+  'apps.payment',
 ]
 
 THIRD_PARTY_APPS = [
@@ -194,6 +191,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
 
+
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
@@ -247,6 +245,11 @@ DJOSER = {
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     },
 }
+
+BT_ENVIRONMENT=os.environ.get('BT_ENVIRONMENT')
+BT_MERCHANT_ID=os.environ.get('BT_MERCHANT_ID')
+BT_PUBLIC_KEY=os.environ.get('BT_PUBLIC_KEY')
+BT_PRIVATE_KEY=os.environ.get('BT_PRIVATE_KEY')
 
 EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 
